@@ -117,3 +117,6 @@ dist
 
 # Environment
 .DS_Store
+
+# 压缩文件
+*.zip
