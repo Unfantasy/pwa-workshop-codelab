@@ -44,11 +44,15 @@ if ('serviceWorker' in navigator) {
     // Try to register the service worker.
     try {
       const reg = await navigator.serviceWorker.register('../service-worker.js');
+      hideLoading();
       console.log('Service worker registered! 😎', reg);
     } catch (err) {
+      hideLoading();
       console.log('😥 Service worker registration failed: ', err);
     }
   });
+} else {
+  hideLoading();
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
@@ -119,3 +123,23 @@ if (window.matchMedia('(display-mode: standalone)').matches) {
 // 判断是否第一次打开该页面，如果是第一次打开该页面
 
 console.log('mainjs 执行中');
+showLoading();
+
+function hideLoading() {
+  // 如果缓存 loadingTime 与当前时间戳差小于2000 则等待至2000ms后再执行操作
+  const timeDiff = new Date().getTime() - (sessionStorage.getItem('loadingTime') || 0);
+  console.log(timeDiff, 'timeDiff');
+  if (timeDiff < 3000) {
+    setTimeout(() => {
+      $('#rb-loading').removeClass('loading--show');
+    }, 3000 - timeDiff);
+    return;
+  }
+
+  $('#rb-loading').removeClass('loading--show');
+}
+function showLoading() {
+  // 设置缓存 loadingTime 为当前时间戳
+  sessionStorage.setItem('loadingTime', new Date().getTime());
+  $('#rb-loading').addClass('loading--show');
+}
